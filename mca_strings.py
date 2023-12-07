@@ -1,11 +1,12 @@
 #!/bin/python3
 from anvil import Region
 from nbt import nbt
+import argparse
 
 found = set()
 
-def harvest_region(path):
-    region = Region.from_file(path)
+def harvest_region(file):
+    region = Region.from_file(file)
     for x in range(32):
         for y in range(32):
             harvest_tag(region.chunk_data(x,y))
@@ -24,4 +25,6 @@ def log_string(name, value):
         print(f"\"{name}\": \"{value}\"")
 
 if __name__=="__main__":
-    harvest_region("r.-1.0.mca")
+    parser = argparse.ArgumentParser(prog="mca_strings", description="Harvest all unique String Tags from a MC Region file.")
+    parser.add_argument("region_file", type=argparse.FileType('rb'))
+    harvest_region(parser.parse_args().region_file)
